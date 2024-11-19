@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OfferRepository::class)]
+#[ORM\Entity(repositoryClass: OfferRepository::class,)]
 class Offer
 {
     #[ORM\Id]
@@ -25,7 +25,7 @@ class Offer
     /**
      * @var Collection<int, Order>
      */
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'offers')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'offer',)]
     private Collection $orders;
 
     public function __construct()
@@ -74,7 +74,7 @@ class Offer
     {
         if (!$this->orders->contains($order)) {
             $this->orders->add($order);
-            $order->setOffers($this);
+            $order->setOffer($this);
         }
 
         return $this;
@@ -84,8 +84,8 @@ class Offer
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getOffers() === $this) {
-                $order->setOffers(null);
+            if ($order->getOffer() === $this) {
+                $order->setOffer(null);
             }
         }
 

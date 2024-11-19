@@ -25,12 +25,15 @@ class Unit
     private Collection $interventions;
 
     #[ORM\ManyToOne(inversedBy: 'units')]
+    #[ORM\JoinColumn (nullable:false)]
     private ?TypeUnit $type = null;
 
     #[ORM\ManyToOne(inversedBy: 'units')]
+    #[ORM\JoinColumn (nullable:false)]
     private ?StateUnit $state = null;
 
     #[ORM\ManyToOne(inversedBy: 'units')]
+    #[ORM\JoinColumn (nullable:false)]
     private ?Bay $bay = null;
 
     /**

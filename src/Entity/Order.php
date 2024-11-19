@@ -35,11 +35,13 @@ class Order
     #[ORM\ManyToMany(targetEntity: Unit::class, inversedBy: 'orders')]
     private Collection $units;
 
-    #[ORM\ManyToOne(inversedBy: 'orders')]
-    private ?Offer $offers = null;
+    #[ORM\ManyToOne(inversedBy: 'orders',)]
+    #[ORM\JoinColumn (nullable:false)]
+    private ?Offer $offer = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
-    private ?Customer $customers = null;
+    #[ORM\JoinColumn (nullable:false)]
+    private ?Customer $customer = null;
 
     public function __construct()
     {
@@ -123,26 +125,26 @@ class Order
         return $this;
     }
 
-    public function getOffers(): ?Offer
+    public function getOffer(): ?Offer
     {
-        return $this->offers;
+        return $this->offer;
     }
 
-    public function setOffers(?Offer $offers): static
+    public function setOffer(?Offer $offer): static
     {
-        $this->offers = $offers;
+        $this->offer = $offer;
 
         return $this;
     }
 
-    public function getCustomers(): ?Customer
+    public function getCustomer(): ?Customer
     {
-        return $this->customers;
+        return $this->customer;
     }
 
-    public function setCustomers(?Customer $customers): static
+    public function setCustomer(?Customer $customer): static
     {
-        $this->customers = $customers;
+        $this->customer = $customer;
 
         return $this;
     }

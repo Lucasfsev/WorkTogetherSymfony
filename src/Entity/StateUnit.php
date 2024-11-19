@@ -15,6 +15,8 @@ class StateUnit
     #[ORM\Column]
     private ?int $id = null;
 
+// Intéressant pour l'état "Eteint" principalement, pas tellement pour l'état en intervention.
+
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 

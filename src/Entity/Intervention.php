@@ -19,10 +19,10 @@ class Intervention
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $report = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $dateStart = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column(nullable: false)]
     private ?\DateTimeImmutable $dateEnd = null;
 
     /**
@@ -32,6 +32,7 @@ class Intervention
     private Collection $units;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
+    #[ORM\JoinColumn (nullable:false)]
     private ?TypeIntervention $type = null;
 
     public function __construct()

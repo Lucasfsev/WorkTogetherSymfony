@@ -10,29 +10,28 @@ use Doctrine\ORM\Mapping as ORM;
 
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer extends User
+class Customer extends User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
 {
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $firstName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $lastName = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $email = null;
 
+    #[ORM\Column(length: 255, nullable:false)]
+    private ?string $address = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $adress = null;
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $city = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $postCode = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable:false)]
     private ?string $country = null;
 
     /**
@@ -83,14 +82,14 @@ class Customer extends User
     }
 
 
-    public function getAdress(): ?string
+    public function getAddress(): ?string
     {
-        return $this->adress;
+        return $this->address;
     }
 
-    public function setAdress(string $adress): static
+    public function setAddress(string $address): static
     {
-        $this->adress = $adress;
+        $this->adress = $address;
 
         return $this;
     }
@@ -143,7 +142,7 @@ class Customer extends User
     {
         if (!$this->orders->contains($order)) {
             $this->orders->add($order);
-            $order->setCustomers($this);
+            $order->setCustomer($this);
         }
 
         return $this;
@@ -153,8 +152,8 @@ class Customer extends User
     {
         if ($this->orders->removeElement($order)) {
             // set the owning side to null (unless already changed)
-            if ($order->getCustomers() === $this) {
-                $order->setCustomers(null);
+            if ($order->getCustomer() === $this) {
+                $order->setCustomer(null);
             }
         }
 
