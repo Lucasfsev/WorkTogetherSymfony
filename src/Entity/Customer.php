@@ -89,7 +89,7 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
 
     public function setAddress(string $address): static
     {
-        $this->adress = $address;
+        $this->address = $address;
 
         return $this;
     }
