@@ -1,0 +1,7 @@
+
+
+// Personnalisez les variables Bootstrap avant l'import
+$primary: darken(#428bca, 20%);
+
+// Importez Bootstrap depuis node_modules
+@import "~bootstrap/scss/bootstrap";

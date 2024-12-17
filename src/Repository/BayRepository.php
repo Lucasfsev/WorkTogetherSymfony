@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Bay;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,6 +18,19 @@ class BayRepository extends ServiceEntityRepository
         parent::__construct($registry, Bay::class);
     }
 
+    public function findBayWAvailableUnits(){
+        $rsm = new ResultSetMapping();
+        // build rsm here
+        $rsm = new ResultSetMappingBuilder($this->getEntityManager());
+        $rsm->addRootEntityFromClassMetadata(Bay::class, 'r');
+
+        $query = $this->getEntityManager()->createNativeQuery('
+                CALL BayWAvailableUnits()
+            ', $rsm);
+
+        $bays = $query->getResult();
+        return $bays;
+    }
     //    /**
     //     * @return Bay[] Returns an array of Bay objects
     //     */
