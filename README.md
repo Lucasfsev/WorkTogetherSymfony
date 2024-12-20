@@ -21,3 +21,13 @@
 
 # Démarrer le serveur 
 - symfony server:start
+
+# Déployer la nouvelle version après chaque push main
+- Ouvrir WSL
+- cd /mnt/c.. (till project)
+- vendor/bin/dep deploy
+
+# TO DO
+
+- Finir et valider la base de donnée (Fixtures, entities)
+- Réparer le mailer
