@@ -40,6 +40,9 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
     #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'customers')]
     private Collection $orders;
 
+    #[ORM\Column]
+    private ?bool $isActive = null;
+
     public function __construct()
     {
         $this->orders = new ArrayCollection();
@@ -156,6 +159,18 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
                 $order->setCustomer(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->isActive;
+    }
+
+    public function setActive(bool $isActive): static
+    {
+        $this->isActive = $isActive;
 
         return $this;
     }

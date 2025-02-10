@@ -1,0 +1,21 @@
+<header>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand d-flex align-items-center" href="{{ path('app_home') }}">
+                <img src="{{ asset('images/logo_WorkTogether.png') }}" alt="Logo WorkTogether" class="logo img-fluid me-2" width="40" height="40">
+                <span class="fw-bold text-light">WorkTogether</span>
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link text-light" href="{{ path('app_home') }}">Accueil</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>

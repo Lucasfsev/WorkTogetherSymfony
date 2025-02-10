@@ -21,5 +21,13 @@
     },
     "dependencies": {
         "bootstrap": "^5.3.3"
-    }
+    },
+    "name": "worktogethersymfony",
+    "version": "1.0.0",
+    "description": "![Logo](assets/images/logo_WorkTogether.webp)",
+    "main": "webpack.config.js",
+    "directories": {
+        "test": "tests"
+    },
+    "author": ""
 }

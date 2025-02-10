@@ -27,16 +27,17 @@ class AppFixtures extends Fixture
 
     public function load(ObjectManager $manager): void
     {
-        // Bays
+        // Création des Bays (max 30 unités par Bay)
         for ($i = 1; $i <= 30; $i++) {
             $bay = new Bay();
             $bay->setReference('B' . str_pad($i, 3, "0", STR_PAD_LEFT));
             $manager->persist($bay);
         }
-
         $manager->flush();
+
         echo "Bays successfully created.\n";
-        // Customers
+
+        // Création des Customers
         $customersData = [
             [
                 'first_name' => 'Jean',
@@ -58,28 +59,7 @@ class AppFixtures extends Fixture
                 'post_code' => '75005',
                 'country' => 'France',
             ],
-            [
-                'first_name' => 'Sophie',
-                'last_name' => 'Lemoine',
-                'email' => 'sophie.lemoine@example.com',
-                'role' => 'ROLE_USER',
-                'address' => '321 Rue Victor Hugo',
-                'city' => 'Lyon',
-                'post_code' => '69001',
-                'country' => 'France',
-            ],
-            [
-                'first_name' => 'Luc',
-                'last_name' => 'Durand',
-                'email' => 'client@client.com',
-                'role' => 'ROLE_USER',
-                'address' => '12 Rue de la République',
-                'city' => 'Marseille',
-                'post_code' => '13001',
-                'country' => 'France',
-            ],
         ];
-        $manager->flush();
 
         $customers = [];
         foreach ($customersData as $customerData) {
@@ -94,17 +74,18 @@ class AppFixtures extends Fixture
             $customer->setCity($customerData['city']);
             $customer->setPostCode($customerData['post_code']);
             $customer->setCountry($customerData['country']);
+            $customer->setIsActive(true); // ✅ Ajout du champ isActive (actif par défaut)
             $manager->persist($customer);
             $customers[] = $customer;
         }
         $manager->flush();
-        // Offers
+
+        // Création des Offers
         $offersData = [
             ['name' => 'Basic Plan', 'price' => 99.99],
             ['name' => 'Premium Plan', 'price' => 199.99],
-            ['name' => 'Enterprise Plan', 'price' => 299.99],
         ];
-        $manager->flush();
+
         $offers = [];
         foreach ($offersData as $offerData) {
             $offer = new Offer();
@@ -113,11 +94,15 @@ class AppFixtures extends Fixture
             $manager->persist($offer);
             $offers[] = $offer;
         }
-
-        // Types of Units
-        $typeUnitsData = ['Web', 'Stockage', 'DataBase'];
-        $typeUnits = [];
         $manager->flush();
+
+        // Création des Units avec Type et State
+        $typeUnitsData = ['Web', 'Stockage', 'DataBase'];
+        $stateUnitsData = ['Available', 'In Use', 'Under Maintenance'];
+
+        $typeUnits = [];
+        $stateUnits = [];
+
         foreach ($typeUnitsData as $typeName) {
             $typeUnit = new TypeUnit();
             $typeUnit->setName($typeName);
@@ -125,83 +110,46 @@ class AppFixtures extends Fixture
             $typeUnits[] = $typeUnit;
         }
 
-        // States of Units
-        $stateUnitsData = ['Available', 'In Use', 'Under Maintenance'];
-        $stateUnits = [];
-
         foreach ($stateUnitsData as $stateName) {
             $stateUnit = new StateUnit();
             $stateUnit->setName($stateName);
             $manager->persist($stateUnit);
             $stateUnits[] = $stateUnit;
         }
+
         $manager->flush();
-        // Units
 
-        $bays = $manager->getRepository(Bay::class)->findAll();
-        foreach ($bays as $bay) {
-            for ($i = 1; $i <= 42; $i++) {
-                $unit = new Unit();
-                $unit->setReference($bay->getReference() . '_U' . str_pad($i, 3, "0", STR_PAD_LEFT));
-                $unit->setType($typeUnits[array_rand($typeUnits)]);
-                $unit->setState($stateUnits[array_rand($stateUnits)]);
-                $unit->setBay($bay);
-                $manager->persist($unit);
-            }
-        }
-
-        // Types of Intervention
-        $typeInterventionsData = ['Repair', 'Upgrade', 'Inspection'];
-        $typeInterventions = [];
-
-        foreach ($typeInterventionsData as $typeName) {
-            $typeIntervention = new TypeIntervention();
-            $typeIntervention->setName($typeName);
-            $manager->persist($typeIntervention);
-            $typeInterventions[] = $typeIntervention;
-        }
-
-        // Interventions
+        // Création des Orders
         for ($i = 1; $i <= 10; $i++) {
-            $intervention = new Intervention();
-            $intervention->setType($typeInterventions[array_rand($typeInterventions)]);
-            $intervention->setReport("Report for intervention #$i");
-            $intervention->setDateStart(new DateTimeImmutable('-' . rand(1, 10) . ' days'));
-            $intervention->setDateEnd(new DateTimeImmutable('+' . rand(1, 10) . ' days'));
-            $manager->persist($intervention);
-        }
-
-        // Orders
-        for ($i = 1; $i <= 15; $i++) {
             $order = new Order();
-
-            if (empty($offers) || empty($customers)) {
-                throw new \Exception('No offers or customers available for creating orders.');
-            }
-
-            $order->setOffer($offers[array_rand($offers)]);
-            $order->setCustomer($customers[array_rand($customers)]);
+            $offer = $offers[array_rand($offers)];
+            $customer = $customers[array_rand($customers)];
 
             $dateStart = new DateTimeImmutable('-' . rand(1, 10) . ' days');
-            $dateEnd = $dateStart->modify('+' . rand(1, 10) . ' days');
+            $dateEnd = $dateStart->modify('+' . rand(30, 60) . ' days');
+
+            $order->setOffer($offer);
+            $order->setCustomer($customer);
             $order->setDateStart($dateStart);
             $order->setDateEnd($dateEnd);
-
-            $order->setRenewal((bool)rand(0, 1));
-            $order->setPrice(rand(100, 500));
-
-            $units = $manager->getRepository(Unit::class)->findAll();
-            if (!empty($units)) {
-                $selectedUnits = array_rand($units, min(rand(1, 5), count($units)));
-                if (!is_array($selectedUnits)) {
-                    $selectedUnits = [$selectedUnits];
-                }
-                foreach ($selectedUnits as $unitIndex) {
-                    $order->addUnit($units[$unitIndex]);
-                }
-            }
+            $order->setRenewal(true); // ✅ Par défaut, les commandes sont renouvelées
+            $order->setPrice($offer->getPrice()); // ✅ Sauvegarde du prix au moment de l'achat
+            $order->setStatus('active'); // ✅ Ajout du status (par défaut "active")
 
             $manager->persist($order);
+
+            // Gestion du renouvellement automatique
+            if ($order->isRenewal()) {
+                $newOrder = new Order();
+                $newOrder->setOffer($offer);
+                $newOrder->setCustomer($customer);
+                $newOrder->setDateStart($dateEnd);
+                $newOrder->setDateEnd($dateEnd->modify('+' . rand(30, 60) . ' days'));
+                $newOrder->setRenewal(true);
+                $newOrder->setPrice($offer->getPrice()); // ✅ Prend le prix actuel pour la nouvelle commande
+                $newOrder->setStatus('pending');
+                $manager->persist($newOrder);
+            }
         }
 
         $manager->flush();

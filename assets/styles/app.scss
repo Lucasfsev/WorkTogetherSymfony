@@ -2,6 +2,35 @@
 
 // Personnalisez les variables Bootstrap avant l'import
 $primary: darken(#428bca, 20%);
+// Définition des couleurs
+$creme: #f5f5dc;
+$whisky: #cc9966;
+$sable: #d6c69f;
 
+// Appliquer le style à la navbar
+.navbar {
+  background-color: $whisky !important; // Couleur whisky pour la navbar
+
+  .navbar-brand {
+    color: $creme !important; // Texte en crème
+    display: flex;
+    align-items: center;
+  }
+
+  .nav-link {
+    color: $creme !important;
+
+    &:hover {
+      color: $sable !important; // Couleur sable au survol
+    }
+  }
+}
+
+// Adapter le logo à la taille de la navbar
+.navbar-brand .logo {
+  height: 60px; // Ajuste la hauteur de l'image
+  width: auto;  // Garde les proportions
+  object-fit: contain;
+}
 // Importez Bootstrap depuis node_modules
 @import "~bootstrap/scss/bootstrap";
