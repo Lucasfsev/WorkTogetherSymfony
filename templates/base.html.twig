@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        <link rel="icon" type="image/png" href="{{ asset('images/logo_WorkTogether.webp') }}">
-        {% block stylesheets %}
-            {{ encore_entry_link_tags('app') }} {# Charge Bootstrap et les styles #}
-        {% endblock %}
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{{ asset('images/logo_WorkTogether.webp') }}">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('app') }} {# Charge Bootstrap et les styles #}
+    {% endblock %}
+</head>
+<body>
+{% include 'header/header.html.twig' %} {# Inclusion du header #}
 
-        {% block javascripts %}
-            {{ encore_entry_script_tags('app') }} {# Charge Bootstrap JS #}
+<main>
+    {% block body %}{% endblock %}
+</main>
 
-        {% endblock %}
-    </head>
-    <body>
-        {% include 'header/header.html.twig' %} {# Inclusion du header #}
-        {% block body %}
+{% include 'footer/footer.html.twig' %} {# Inclusion du footer #}
 
-        {% endblock %}
-    </body>
+{% block javascripts %}
+    {{ encore_entry_script_tags('app') }} {# Charge Bootstrap JS #}
+{% endblock %}
+</body>
 </html>
