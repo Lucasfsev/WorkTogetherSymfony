@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des Offres{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <header class="text-center mb-4">
+            <h1 class="text-primary">Liste des Offres</h1>
+        </header>
+
+        <section>
+            <ul class="list-group">
+                {% for offer in offers %}
+                    <li class="list-group-item">
+                        <a href="{{ path('offer_show', { 'id': offer.id }) }}">
+                            <h4>{{ offer.name }}</h4>
+                        </a>
+                    </li>
+                {% else %}
+                    <p>Aucune offre disponible.</p>
+                {% endfor %}
+            </ul>
+        </section>
+    </div>
+{% endblock %}
