@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TypeUnitRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypeUnitRepository::class)]
@@ -15,63 +13,37 @@ class TypeUnit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    #[ORM\Column(length: 100)]
+    private ?string $reference = null;
 
-    /**
-     * @var Collection<int, Unit>
-     */
-    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'type')]
-    private Collection $units;
-
-    public function __construct()
-    {
-        $this->units = new ArrayCollection();
-    }
+    #[ORM\Column(length: 10)]
+    private ?string $color = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getReference(): ?string
     {
-        return $this->name;
+        return $this->reference;
     }
 
-    public function setName(string $name): static
+    public function setReference(string $reference): static
     {
-        $this->name = $name;
+        $this->reference = $reference;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Unit>
-     */
-    public function getUnits(): Collection
+    public function getColor(): ?string
     {
-        return $this->units;
+        return $this->color;
     }
 
-    public function addUnit(Unit $unit): static
+    public function setColor(string $color): static
     {
-        if (!$this->units->contains($unit)) {
-            $this->units->add($unit);
-            $unit->setType($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUnit(Unit $unit): static
-    {
-        if ($this->units->removeElement($unit)) {
-            // set the owning side to null (unless already changed)
-            if ($unit->getType() === $this) {
-                $unit->setType(null);
-            }
-        }
+        $this->color = $color;
 
         return $this;
     }

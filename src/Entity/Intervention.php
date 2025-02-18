@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\InterventionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -16,94 +14,57 @@ class Intervention
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::TEXT, nullable: true)]
-    private ?string $report = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $startDate = null;
 
-    #[ORM\Column(nullable: false)]
-    private ?\DateTimeImmutable $dateStart = null;
-
-    #[ORM\Column(nullable: false)]
-    private ?\DateTimeImmutable $dateEnd = null;
-
-    /**
-     * @var Collection<int, Unit>
-     */
-    #[ORM\ManyToMany(targetEntity: Unit::class, mappedBy: 'interventions')]
-    private Collection $units;
+    #[ORM\Column(type: Types::DATETIMETZ_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'interventions')]
-    #[ORM\JoinColumn (nullable:false)]
-    private ?TypeIntervention $type = null;
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Unit $unit = null;
 
-    public function __construct()
-    {
-        $this->units = new ArrayCollection();
-    }
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeIntervention $type = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getReport(): ?string
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->report;
+        return $this->startDate;
     }
 
-    public function setReport(?string $report): static
+    public function setStartDate(\DateTimeInterface $startDate): static
     {
-        $this->report = $report;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getDateStart(): ?\DateTimeImmutable
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->dateStart;
+        return $this->endDate;
     }
 
-    public function setDateStart(?\DateTimeImmutable $dateStart): static
+    public function setEndDate(?\DateTimeInterface $endDate): static
     {
-        $this->dateStart = $dateStart;
+        $this->endDate = $endDate;
 
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTimeImmutable
+    public function getUnit(): ?Unit
     {
-        return $this->dateEnd;
+        return $this->unit;
     }
 
-    public function setDateEnd(?\DateTimeImmutable $dateEnd): static
+    public function setUnit(?Unit $unit): static
     {
-        $this->dateEnd = $dateEnd;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Unit>
-     */
-    public function getUnits(): Collection
-    {
-        return $this->units;
-    }
-
-    public function addUnit(Unit $unit): static
-    {
-        if (!$this->units->contains($unit)) {
-            $this->units->add($unit);
-            $unit->addIntervention($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUnit(Unit $unit): static
-    {
-        if ($this->units->removeElement($unit)) {
-            $unit->removeIntervention($this);
-        }
+        $this->unit = $unit;
 
         return $this;
     }

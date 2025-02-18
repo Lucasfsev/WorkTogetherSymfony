@@ -15,7 +15,7 @@ class Bay
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10)]
     private ?string $reference = null;
 
     /**

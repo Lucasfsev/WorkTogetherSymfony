@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TypeInterventionRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TypeInterventionRepository::class)]
@@ -16,62 +14,36 @@ class TypeIntervention
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    private ?string $name = null;
+    private ?string $reference = null;
 
-    /**
-     * @var Collection<int, Intervention>
-     */
-    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'type')]
-    private Collection $interventions;
-
-    public function __construct()
-    {
-        $this->interventions = new ArrayCollection();
-    }
+    #[ORM\Column(length: 10)]
+    private ?string $color = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getReference(): ?string
     {
-        return $this->name;
+        return $this->reference;
     }
 
-    public function setName(string $name): static
+    public function setReference(string $reference): static
     {
-        $this->name = $name;
+        $this->reference = $reference;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Intervention>
-     */
-    public function getInterventions(): Collection
+    public function getColor(): ?string
     {
-        return $this->interventions;
+        return $this->color;
     }
 
-    public function addIntervention(Intervention $intervention): static
+    public function setColor(string $color): static
     {
-        if (!$this->interventions->contains($intervention)) {
-            $this->interventions->add($intervention);
-            $intervention->setType($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIntervention(Intervention $intervention): static
-    {
-        if ($this->interventions->removeElement($intervention)) {
-            // set the owning side to null (unless already changed)
-            if ($intervention->getType() === $this) {
-                $intervention->setType(null);
-            }
-        }
+        $this->color = $color;
 
         return $this;
     }

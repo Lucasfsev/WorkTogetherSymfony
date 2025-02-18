@@ -17,30 +17,27 @@ class Order
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private ?\DateTimeImmutable $dateStart = null;
+    #[ORM\Column(type: Types::DATE_MUTABLE)]
+    private ?\DateTimeInterface $startDate = null;
+
+    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $endDate = null;
 
     #[ORM\Column]
-    private ?\DateTimeImmutable $dateEnd = null;
-
-    #[ORM\Column]
-    private ?bool $renewal = null;
-
-    #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
+    private ?float $unitPrice = null;
 
     /**
      * @var Collection<int, Unit>
      */
-    #[ORM\ManyToMany(targetEntity: Unit::class, inversedBy: 'orders')]
+    #[ORM\ManyToMany(targetEntity: Unit::class, mappedBy: 'orders')]
     private Collection $units;
 
-    #[ORM\ManyToOne(inversedBy: 'orders',)]
-    #[ORM\JoinColumn (nullable:false)]
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Offer $offer = null;
 
     #[ORM\ManyToOne(inversedBy: 'orders')]
-    #[ORM\JoinColumn (nullable:false)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Customer $customer = null;
 
     public function __construct()
@@ -53,50 +50,38 @@ class Order
         return $this->id;
     }
 
-    public function getDateStart(): ?\DateTimeImmutable
+    public function getStartDate(): ?\DateTimeInterface
     {
-        return $this->dateStart;
+        return $this->startDate;
     }
 
-    public function setDateStart(\DateTimeImmutable $dateStart): static
+    public function setStartDate(\DateTimeInterface $startDate): static
     {
-        $this->dateStart = $dateStart;
+        $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTimeImmutable
+    public function getEndDate(): ?\DateTimeInterface
     {
-        return $this->dateEnd;
+        return $this->endDate;
     }
 
-    public function setDateEnd(\DateTimeImmutable $dateEnd): static
+    public function setEndDate(?\DateTimeInterface $endDate): static
     {
-        $this->dateEnd = $dateEnd;
+        $this->endDate = $endDate;
 
         return $this;
     }
 
-    public function isRenewal(): ?bool
+    public function getUnitPrice(): ?float
     {
-        return $this->renewal;
+        return $this->unitPrice;
     }
 
-    public function setRenewal(bool $renewal): static
+    public function setUnitPrice(float $unitPrice): static
     {
-        $this->renewal = $renewal;
-
-        return $this;
-    }
-
-    public function getPrice(): ?string
-    {
-        return $this->price;
-    }
-
-    public function setPrice(string $price): static
-    {
-        $this->price = $price;
+        $this->unitPrice = $unitPrice;
 
         return $this;
     }
@@ -113,6 +98,7 @@ class Order
     {
         if (!$this->units->contains($unit)) {
             $this->units->add($unit);
+            $unit->addOrder($this);
         }
 
         return $this;
@@ -120,7 +106,9 @@ class Order
 
     public function removeUnit(Unit $unit): static
     {
-        $this->units->removeElement($unit);
+        if ($this->units->removeElement($unit)) {
+            $unit->removeOrder($this);
+        }
 
         return $this;
     }
@@ -148,5 +136,4 @@ class Order
 
         return $this;
     }
-
 }

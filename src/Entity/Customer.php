@@ -6,105 +6,43 @@ use App\Repository\CustomerRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-
-
+use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 
 #[ORM\Entity(repositoryClass: CustomerRepository::class)]
-class Customer extends User implements \Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface
+class Customer extends User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $billingAddress = null;
 
-    #[ORM\Column(length: 255, nullable:false)]
-    private ?string $firstName = null;
-
-    #[ORM\Column(length: 255, nullable:false)]
-    private ?string $lastName = null;
-
-    #[ORM\Column(length: 255, nullable:false)]
-    private ?string $email = null;
-
-    #[ORM\Column(length: 255, nullable:false)]
-    private ?string $address = null;
-
-    #[ORM\Column(length: 255, nullable:false)]
-    private ?string $city = null;
-
-    #[ORM\Column(length: 255, nullable:false)]
+    #[ORM\Column(length: 10, nullable: true)]
     private ?string $postCode = null;
 
-    #[ORM\Column(length: 255, nullable:false)]
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $town = null;
+
+    #[ORM\Column(length: 170, nullable: true)]
     private ?string $country = null;
 
     /**
      * @var Collection<int, Order>
      */
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'customers')]
+    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'customer')]
     private Collection $orders;
-
-    #[ORM\Column]
-    private ?bool $isActive = null;
 
     public function __construct()
     {
         $this->orders = new ArrayCollection();
     }
 
-    public function getFirstName(): ?string
+    public function getBillingAddress(): ?string
     {
-        return $this->firstName;
+        return $this->billingAddress;
     }
 
-    public function setFirstName(string $firstName): static
+    public function setBillingAddress(?string $billingAddress): static
     {
-        $this->firstName = $firstName;
-
-        return $this;
-    }
-
-    public function getLastName(): ?string
-    {
-        return $this->lastName;
-    }
-
-    public function setLastName(string $lastName): static
-    {
-        $this->lastName = $lastName;
-
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(string $email): static
-    {
-        $this->email = $email;
-
-        return $this;
-    }
-
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): static
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getCity(): ?string
-    {
-        return $this->city;
-    }
-
-    public function setCity(string $city): static
-    {
-        $this->city = $city;
+        $this->billingAddress = $billingAddress;
 
         return $this;
     }
@@ -114,9 +52,21 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
         return $this->postCode;
     }
 
-    public function setPostCode(string $postCode): static
+    public function setPostCode(?string $postCode): static
     {
         $this->postCode = $postCode;
+
+        return $this;
+    }
+
+    public function getTown(): ?string
+    {
+        return $this->town;
+    }
+
+    public function setTown(?string $town): static
+    {
+        $this->town = $town;
 
         return $this;
     }
@@ -126,7 +76,7 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
         return $this->country;
     }
 
-    public function setCountry(string $country): static
+    public function setCountry(?string $country): static
     {
         $this->country = $country;
 
@@ -159,18 +109,6 @@ class Customer extends User implements \Symfony\Component\Security\Core\User\Pas
                 $order->setCustomer(null);
             }
         }
-
-        return $this;
-    }
-
-    public function isActive(): ?bool
-    {
-        return $this->isActive;
-    }
-
-    public function setActive(bool $isActive): static
-    {
-        $this->isActive = $isActive;
 
         return $this;
     }

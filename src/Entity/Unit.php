@@ -15,31 +15,31 @@ class Unit
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 10)]
     private ?string $reference = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?StateUnit $state = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?TypeUnit $type = null;
+
+    #[ORM\ManyToOne(inversedBy: 'units')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Bay $bay = null;
 
     /**
      * @var Collection<int, Intervention>
      */
-    #[ORM\ManyToMany(targetEntity: Intervention::class, inversedBy: 'units')]
+    #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'unit')]
     private Collection $interventions;
-
-    #[ORM\ManyToOne(inversedBy: 'units')]
-    #[ORM\JoinColumn (nullable:false)]
-    private ?TypeUnit $type = null;
-
-    #[ORM\ManyToOne(inversedBy: 'units')]
-    #[ORM\JoinColumn (nullable:false)]
-    private ?StateUnit $state = null;
-
-    #[ORM\ManyToOne(inversedBy: 'units')]
-    #[ORM\JoinColumn (nullable:false)]
-    private ?Bay $bay = null;
 
     /**
      * @var Collection<int, Order>
      */
-    #[ORM\ManyToMany(targetEntity: Order::class, mappedBy: 'units')]
+    #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'units')]
     private Collection $orders;
 
     public function __construct()
@@ -65,26 +65,14 @@ class Unit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Intervention>
-     */
-    public function getInterventions(): Collection
+    public function getState(): ?StateUnit
     {
-        return $this->interventions;
+        return $this->state;
     }
 
-    public function addIntervention(Intervention $intervention): static
+    public function setState(?StateUnit $state): static
     {
-        if (!$this->interventions->contains($intervention)) {
-            $this->interventions->add($intervention);
-        }
-
-        return $this;
-    }
-
-    public function removeIntervention(Intervention $intervention): static
-    {
-        $this->interventions->removeElement($intervention);
+        $this->state = $state;
 
         return $this;
     }
@@ -97,18 +85,6 @@ class Unit
     public function setType(?TypeUnit $type): static
     {
         $this->type = $type;
-
-        return $this;
-    }
-
-    public function getState(): ?StateUnit
-    {
-        return $this->state;
-    }
-
-    public function setState(?StateUnit $state): static
-    {
-        $this->state = $state;
 
         return $this;
     }
@@ -126,6 +102,36 @@ class Unit
     }
 
     /**
+     * @return Collection<int, Intervention>
+     */
+    public function getInterventions(): Collection
+    {
+        return $this->interventions;
+    }
+
+    public function addIntervention(Intervention $intervention): static
+    {
+        if (!$this->interventions->contains($intervention)) {
+            $this->interventions->add($intervention);
+            $intervention->setUnit($this);
+        }
+
+        return $this;
+    }
+
+    public function removeIntervention(Intervention $intervention): static
+    {
+        if ($this->interventions->removeElement($intervention)) {
+            // set the owning side to null (unless already changed)
+            if ($intervention->getUnit() === $this) {
+                $intervention->setUnit(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
      * @return Collection<int, Order>
      */
     public function getOrders(): Collection
@@ -137,7 +143,6 @@ class Unit
     {
         if (!$this->orders->contains($order)) {
             $this->orders->add($order);
-            $order->addUnit($this);
         }
 
         return $this;
@@ -145,9 +150,7 @@ class Unit
 
     public function removeOrder(Order $order): static
     {
-        if ($this->orders->removeElement($order)) {
-            $order->removeUnit($this);
-        }
+        $this->orders->removeElement($order);
 
         return $this;
     }

@@ -3,12 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\OfferRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: OfferRepository::class,)]
+#[ORM\Entity(repositoryClass: OfferRepository::class)]
 class Offer
 {
     #[ORM\Id]
@@ -16,26 +14,54 @@ class Offer
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(type: Types::SMALLINT)]
+    private ?int $promotionPercentage = null;
+
+    #[ORM\Column(type: Types::SMALLINT, nullable: true)]
+    private ?int $unitLimit = null;
+
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
 
+    #[ORM\Column]
+    private ?bool $available = null;
+
     #[ORM\Column(type: Types::DECIMAL, precision: 10, scale: 2)]
-    private ?string $price = null;
+    private ?float $price = null;
 
-    /**
-     * @var Collection<int, Order>
-     */
-    #[ORM\OneToMany(targetEntity: Order::class, mappedBy: 'offer',)]
-    private Collection $orders;
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $description = null;
 
-    public function __construct()
-    {
-        $this->orders = new ArrayCollection();
-    }
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $imagePath = null;
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function getPromotionPercentage(): ?int
+    {
+        return $this->promotionPercentage;
+    }
+
+    public function setPromotionPercentage(int $promotionPercentage): static
+    {
+        $this->promotionPercentage = $promotionPercentage;
+
+        return $this;
+    }
+
+    public function getUnitLimit(): ?int
+    {
+        return $this->unitLimit;
+    }
+
+    public function setUnitLimit(?int $unitLimit): static
+    {
+        $this->unitLimit = $unitLimit;
+
+        return $this;
     }
 
     public function getName(): ?string
@@ -50,44 +76,50 @@ class Offer
         return $this;
     }
 
-    public function getPrice(): ?string
+    public function isAvailable(): ?bool
+    {
+        return $this->available;
+    }
+
+    public function setAvailable(bool $available): static
+    {
+        $this->available = $available;
+
+        return $this;
+    }
+
+    public function getPrice(): ?float
     {
         return $this->price;
     }
 
-    public function setPrice(string $price): static
+    public function setPrice(float $price): static
     {
         $this->price = $price;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Order>
-     */
-    public function getOrders(): Collection
+    public function getDescription(): ?string
     {
-        return $this->orders;
+        return $this->description;
     }
 
-    public function addOrder(Order $order): static
+    public function setDescription(?string $description): static
     {
-        if (!$this->orders->contains($order)) {
-            $this->orders->add($order);
-            $order->setOffer($this);
-        }
+        $this->description = $description;
 
         return $this;
     }
 
-    public function removeOrder(Order $order): static
+    public function getImagePath(): ?string
     {
-        if ($this->orders->removeElement($order)) {
-            // set the owning side to null (unless already changed)
-            if ($order->getOffer() === $this) {
-                $order->setOffer(null);
-            }
-        }
+        return $this->imagePath;
+    }
+
+    public function setImagePath(?string $imagePath): static
+    {
+        $this->imagePath = $imagePath;
 
         return $this;
     }

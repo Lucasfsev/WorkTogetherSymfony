@@ -2,13 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\StateUnitRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
+use App\Repository\StateRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-
-#[ORM\Entity(repositoryClass: StateUnitRepository::class)]
+#[ORM\Entity(repositoryClass: StateRepository::class)]
 class StateUnit
 {
     #[ORM\Id]
@@ -16,21 +13,11 @@ class StateUnit
     #[ORM\Column]
     private ?int $id = null;
 
-// Intéressant pour l'état "Eteint" principalement, pas tellement pour l'état en intervention.
-
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 100)]
     private ?string $name = null;
 
-    /**
-     * @var Collection<int, Unit>
-     */
-    #[ORM\OneToMany(targetEntity: Unit::class, mappedBy: 'state')]
-    private Collection $units;
-
-    public function __construct()
-    {
-        $this->units = new ArrayCollection();
-    }
+    #[ORM\Column(length: 10)]
+    private ?string $color = null;
 
     public function getId(): ?int
     {
@@ -49,32 +36,14 @@ class StateUnit
         return $this;
     }
 
-    /**
-     * @return Collection<int, Unit>
-     */
-    public function getUnits(): Collection
+    public function getColor(): ?string
     {
-        return $this->units;
+        return $this->color;
     }
 
-    public function addUnit(Unit $unit): static
+    public function setColor(string $color): static
     {
-        if (!$this->units->contains($unit)) {
-            $this->units->add($unit);
-            $unit->setState($this);
-        }
-
-        return $this;
-    }
-
-    public function removeUnit(Unit $unit): static
-    {
-        if ($this->units->removeElement($unit)) {
-            // set the owning side to null (unless already changed)
-            if ($unit->getState() === $this) {
-                $unit->setState(null);
-            }
-        }
+        $this->color = $color;
 
         return $this;
     }

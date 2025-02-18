@@ -13,46 +13,20 @@
         <section class="mb-5">
             <h2 class="text-secondary">Nos offres commerciales</h2>
             <div class="row">
-                <div class="col-md-3">
-                    <div class="card border-primary mb-3">
-                        <div class="card-header bg-primary text-white">Base</div>
-                        <div class="card-body">
-                            <h5 class="card-title">1 unité</h5>
-                            <p class="card-text">100 €/mois</p>
-                            <a href="#" class="btn btn-primary">Voir l'offre</a>
+                {% for offer in offers %}
+                    <div class="col-md-3">
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">{{ offer.name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ offer.unitLimit }} unités</h5>
+                                <p class="card-text">{{ offer.price|number_format(2, ',', ' ') }} €/mois</p>
+                                <a href="{{ path('offer_show', { 'id': offer.id }) }}" class="btn btn-primary">Voir l'offre</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card border-success mb-3">
-                        <div class="card-header bg-success text-white">Start-up</div>
-                        <div class="card-body">
-                            <h5 class="card-title">10 unités</h5>
-                            <p class="card-text">900 €/mois (-10%)</p>
-                            <a href="#" class="btn btn-success">Voir l'offre</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card border-warning mb-3">
-                        <div class="card-header bg-warning text-white">PME</div>
-                        <div class="card-body">
-                            <h5 class="card-title">21 unités</h5>
-                            <p class="card-text">1 680 €/mois (-20%)</p>
-                            <a href="#" class="btn btn-warning">Voir l'offre</a>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card border-danger mb-3">
-                        <div class="card-header bg-danger text-white">Entreprise</div>
-                        <div class="card-body">
-                            <h5 class="card-title">42 unités</h5>
-                            <p class="card-text">2 940 €/mois (-30%)</p>
-                            <a href="#" class="btn btn-danger">Voir l'offre</a>
-                        </div>
-                    </div>
-                </div>
+                {% else %}
+                    <p>Aucune offre disponible.</p>
+                {% endfor %}
             </div>
         </section>
 
