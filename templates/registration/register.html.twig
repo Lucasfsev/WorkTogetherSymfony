@@ -1,0 +1,45 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Inscription{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        <header class="text-center mb-4">
+            <img src="{{ asset('images/WorkTogether_bear_logo.webp') }}" alt="WorkTogether Data Solutions Bear" class="img-fluid mb-3 rounded-circle" style="max-width: 200px; height: 200px;">
+            <h1 class="text-primary">Inscription</h1>
+            <p class="lead">Rejoignez-nous dès aujourd'hui</p>
+        </header>
+
+        <section class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-primary mb-3">
+                    <div class="card-header bg-primary text-white">Créer un compte</div>
+                    <div class="card-body">
+                        {{ form_start(registrationForm) }}
+
+                        {{ form_errors(registrationForm) }}
+
+                        <div class="mb-3">
+                            {{ form_row(registrationForm.mailAddress, {'attr': {'class': 'form-control'}}) }}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control'}, 'label': 'Mot de passe'}) }}
+                        </div>
+
+                        <div class="mb-3 form-check">
+                            {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                        </div>
+
+                        <button type="submit" class="btn btn-primary w-100">S'inscrire</button>
+                        {{ form_end(registrationForm) }}
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
