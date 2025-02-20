@@ -1,0 +1,59 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Connexion{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        {% for flash_error in app.flashes('verify_email_error') %}
+            <div class="alert alert-danger" role="alert">{{ flash_error }}</div>
+        {% endfor %}
+
+        <header class="text-center mb-4">
+            <img src="{{ asset('images/WorkTogether_bear_logo.webp') }}" alt="WorkTogether Data Solutions Bear" class="img-fluid mb-3 rounded-circle" style="max-width: 200px; height: 200px;">
+            <h1 class="text-primary">Connexion</h1>
+            <p class="lead">Bienvenue, veuillez vous connecter</p>
+        </header>
+
+        <section class="d-flex justify-content-center">
+            <div class="col-md-6">
+                <div class="card border-primary mb-3">
+                    <div class="card-header bg-primary text-white">Se connecter</div>
+                    <div class="card-body">
+                        {% if error %}
+                            <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+                        {% endif %}
+
+                        {% if app.user %}
+                            <div class="mb-3">
+                                Vous êtes connecté en tant que {{ app.user.userIdentifier }}, <a href="{{ path('app_logout') }}">Se déconnecter</a>
+                            </div>
+                        {% endif %}
+
+                        <form method="post">
+                            <div class="mb-3">
+                                <label for="inputMailAddress">Adresse mail</label>
+                                <input type="text" value="{{ last_username }}" name="mailAddress" id="inputMailAddress" class="form-control" autocomplete="username" required autofocus>
+                            </div>
+
+                            <div class="mb-3">
+                                <label for="inputPassword">Mot de passe</label>
+                                <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
+                            </div>
+
+                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                            <div class="form-check mb-3">
+                                <input type="checkbox" name="_remember_me" class="form-check-input" id="rememberMe">
+                                <label class="form-check-label" for="rememberMe">Se souvenir de moi</label>
+                            </div>
+
+                            <button class="btn btn-lg btn-primary w-100" type="submit">
+                                Se connecter
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+{% endblock %}
