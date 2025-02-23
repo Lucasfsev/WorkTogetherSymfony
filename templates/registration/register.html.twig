@@ -21,18 +21,95 @@
                     <div class="card-body">
                         {{ form_start(registrationForm) }}
 
-                        {{ form_errors(registrationForm) }}
+                        {# Affichage des erreurs globaux #}
+                        {% if registrationForm.vars.errors|length > 0 %}
+                            <div class="alert alert-danger">
+                                {% for error in registrationForm.vars.errors %}
+                                    <p class="mb-0">{{ error.message }}</p>
+                                {% endfor %}
+                            </div>
+                        {% endif %}
 
                         <div class="mb-3">
-                            {{ form_row(registrationForm.mailAddress, {'attr': {'class': 'form-control'}}) }}
+                            {{ form_label(registrationForm.firstName) }}
+                            {{ form_widget(registrationForm.firstName, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.firstName.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-3">
-                            {{ form_row(registrationForm.plainPassword, {'attr': {'class': 'form-control'}, 'label': 'Mot de passe'}) }}
+                            {{ form_label(registrationForm.lastName) }}
+                            {{ form_widget(registrationForm.lastName, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.lastName.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.mailAddress) }}
+                            {{ form_widget(registrationForm.mailAddress, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.mailAddress.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword.first) }}
+                            {{ form_widget(registrationForm.plainPassword.first, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.plainPassword.first.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.plainPassword.second) }}
+                            {{ form_widget(registrationForm.plainPassword.second, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.plainPassword.second.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.billingAddress) }}
+                            {{ form_widget(registrationForm.billingAddress, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.billingAddress.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.postCode) }}
+                            {{ form_widget(registrationForm.postCode, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.postCode.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.town) }}
+                            {{ form_widget(registrationForm.town, {'attr': {'class': 'form-control'}}) }}
+                            {% for error in registrationForm.town.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="mb-3">
+                            {{ form_label(registrationForm.country) }}
+                            {{ form_widget(registrationForm.country, {'attr': {'class': 'form-select'}}) }}
+                            {% for error in registrationForm.country.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
                         </div>
 
                         <div class="mb-3 form-check">
-                            {{ form_row(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                            {{ form_widget(registrationForm.agreeTerms, {'attr': {'class': 'form-check-input'}}) }}
+                            <label class="form-check-label" for="{{ registrationForm.agreeTerms.vars.id }}">
+                                J'accepte les <a href="{{ path('app_cgu') }}" target="_blank">conditions générales d'utilisation</a>
+                            </label>
+                            {% for error in registrationForm.agreeTerms.vars.errors %}
+                                <div class="text-danger">{{ error.message }}</div>
+                            {% endfor %}
                         </div>
 
                         <button type="submit" class="btn btn-primary w-100">S'inscrire</button>

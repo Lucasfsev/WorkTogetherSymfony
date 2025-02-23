@@ -13,9 +13,26 @@
             <p>{{ offer.description }}</p>
 
             <h3 class="mt-3">Prix</h3>
-            <p><strong>{{ offer.price|number_format(2, ',', ' ') }} €</strong></p>
+            <p><strong>{{ offer.price|number_format(2, ',', ' ') }} €/mois TTC</strong></p>
         </section>
 
-        <a href="{{ path('offer_index') }}" class="btn btn-primary mt-4">Retour à la liste des offres</a>
+        {% if is_granted('IS_AUTHENTICATED_FULLY') %}
+            {% set alreadyReserved = false %}
+            {% for order in app.user.orders %}
+                {% if order.offer.id == offer.id %}
+                    {% set alreadyReserved = true %}
+                {% endif %}
+            {% endfor %}
+
+            {% if alreadyReserved %}
+                <button class="btn btn-secondary" disabled>Déjà réservé</button>
+            {% else %}
+                <a href="{{ path('offer_reserve', { 'id': offer.id }) }}" class="btn btn-primary ">Réserver cette offre</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('app_login') }}" class="btn btn-primary">Connectez-vous pour réserver</a>
+        {% endif %}
+
+        <a href="{{ path('offer_index') }}" class="btn btn-primary">Retour à la liste des offres</a>
     </div>
 {% endblock %}

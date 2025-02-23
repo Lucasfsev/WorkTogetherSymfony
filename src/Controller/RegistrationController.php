@@ -35,6 +35,10 @@ class RegistrationController extends AbstractController
     {
         $user = new Customer();
         $form = $this->createForm(RegistrationFormType::class, $user);
+        $user->setBillingAddress($form->get('billingAddress')->getData());
+        $user->setPostCode($form->get('postCode')->getData());
+        $user->setTown($form->get('town')->getData());
+        $user->setCountry($form->get('country')->getData());
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {

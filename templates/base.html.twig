@@ -8,10 +8,10 @@
         {{ encore_entry_link_tags('app') }} {# Charge Bootstrap et les styles #}
     {% endblock %}
 </head>
-<body>
+<body class="d-flex flex-column min-vh-100">
 {% include 'header/header.html.twig' %} {# Inclusion du header #}
 
-<main>
+<main class="flex-grow-1">
     {% block body %}{% endblock %}
 </main>
 

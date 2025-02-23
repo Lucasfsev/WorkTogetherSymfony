@@ -136,7 +136,8 @@ class AppFixtures extends Fixture
             $newUser->setFirstname($user[0]);
             $newUser->setLastname($user[1]);
             $newUser->setMailAddress($user[2]);
-            $newUser->setPassword($user[3]);
+            $password = $this->hasher->hashPassword($newUser, $user[3]);
+            $newUser->setPassword($password);
             $newUser->setRole("ROLE_ADMIN");
             $manager->persist($newUser);
         }

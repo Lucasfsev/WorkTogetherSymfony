@@ -3,58 +3,92 @@
 namespace App\Controller;
 
 use App\Entity\Offer;
+use App\Entity\Order;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 
 class OfferController extends AbstractController
 {
-    private $em;
+    private EntityManagerInterface $em;
+    private Security $security;
 
-    // Injection de EntityManagerInterface dans le constructeur
-    public function __construct(EntityManagerInterface $em)
+    public function __construct(EntityManagerInterface $em, Security $security)
     {
         $this->em = $em;
+        $this->security = $security;
     }
 
-    /**
-     * Affiche la liste de toutes les offres.
-     *
-     * @return Response
-     */
     #[Route('/offers', name: 'offer_index')]
     public function index(): Response
     {
-        // Récupérer toutes les offres depuis la base de données
         $offers = $this->em->getRepository(Offer::class)->findAll();
-
-        // Passer la liste des offres à la vue Twig
         return $this->render('offer/index.html.twig', [
             'offers' => $offers,
         ]);
     }
 
-    /**
-     * Affiche les détails d'une offre spécifique.
-     *
-     * @param int $id L'identifiant de l'offre.
-     * @return Response
-     */
     #[Route('/offer/{id}', name: 'offer_show')]
     public function show(int $id): Response
     {
-        // Récupérer l'offre depuis la base de données
         $offer = $this->em->getRepository(Offer::class)->find($id);
 
-        // Vérifier si l'offre existe
         if (!$offer) {
             throw $this->createNotFoundException('L\'offre n\'a pas été trouvée.');
         }
 
-        // Passer l'offre à la vue Twig
         return $this->render('offer/show.html.twig', [
             'offer' => $offer,
         ]);
+    }
+
+    #[Route('/offer/{id}/reserve', name: 'offer_reserve')]
+    public function reserve(Offer $offer): Response
+    {
+        $user = $this->security->getUser();
+
+        if (!$user) {
+            $this->addFlash('danger', 'Vous devez être connecté pour réserver une offre.');
+            return $this->redirectToRoute('app_login');
+        }
+
+        // Check if the user has already reserved this offer
+        foreach ($user->getOrders() as $order) {
+            if ($order->getOffer()->getId() === $offer->getId()) {
+                $this->addFlash('warning', 'Vous avez déjà réservé cette offre.');
+                return $this->redirectToRoute('offer_index');
+            }
+        }
+
+        // Check available units
+        $availableUnits = $this->em->getRepository(Unit::class)->findAvailableUnits($offer->getUnitLimit());
+
+        if (count($availableUnits) < $offer->getUnitLimit()) {
+            $this->addFlash('danger', 'Pas assez d\'unités disponibles pour cette offre.');
+            return $this->redirectToRoute('offer_index');
+        }
+
+        // Create a new order
+        $order = new Order();
+        $order->setOffer($offer);
+        $order->setCustomer($user);
+        $this->em->persist($order);
+
+        // Reserve the units and link them to the order
+        for ($i = 0; $i < $offer->getUnitLimit(); $i++) {
+            if (empty($availableUnits)) {
+                break; // Safety check to avoid errors if units run out
+            }
+            $unit = array_pop($availableUnits); // Take an available unit
+            $order->addUnit($unit); // Add the unit to the order
+            $unit->addOrder($order); // Link the unit to the order
+        }
+
+        $this->em->flush();
+
+        $this->addFlash('success', 'Offre réservée avec succès !');
+        return $this->redirectToRoute('offer_index');
     }
 }

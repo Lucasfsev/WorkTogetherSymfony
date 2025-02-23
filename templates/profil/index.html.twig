@@ -1,0 +1,62 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon Profil{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <header class="text-center mb-4">
+            <h1 class="text-primary">Mon Profil</h1>
+        </header>
+
+        <section>
+            <ul class="list-group">
+                <li class="list-group-item">
+                    <strong>Nom :</strong> {{ app.user.lastname }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Prénom :</strong> {{ app.user.firstname }}
+                </li>
+                <li class="list-group-item">
+                    <strong>Email :</strong> {{ app.user.mailAddress }}
+                </li>
+            </ul>
+        </section>
+
+        {% if customer %}
+            <section class="mt-4">
+                <h3 class="text-primary">Adresse de Facturation</h3>
+                <ul class="list-group">
+                    <li class="list-group-item"><strong>Adresse :</strong> {{ customer.billingAddress ?: 'Non renseigné' }}</li>
+                    <li class="list-group-item"><strong>Code Postal :</strong> {{ customer.postCode ?: 'Non renseigné' }}</li>
+                    <li class="list-group-item"><strong>Ville :</strong> {{ customer.town ?: 'Non renseigné' }}</li>
+                    <li class="list-group-item"><strong>Pays :</strong> {{ customer.country ?: 'Non renseigné' }}</li>
+                </ul>
+            </section>
+        {% endif %}
+
+        <h2 class="text-primary mt-4">Mes Commandes</h2>
+        {% if orders is not empty %}
+            <ul class="list-group">
+                {% for order in orders %}
+                    <li class="list-group-item">
+                        <h5 class="mb-1">Offre: {{ order.offer.name }}</h5>
+                        <p>Date de début: {{ order.startDate|date('d/m/Y') }}</p>
+                        <p>Prix: {{ order.unitPrice }} €</p>
+                        <strong>Unités réservées:</strong>
+                        <ul class="list-group mt-2">
+                            {% for unit in order.units %}
+                                <li class="list-group-item">Unité : {{ unit.reference }}</li>
+                            {% endfor %}
+                        </ul>
+                    </li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>Aucune commande trouvée.</p>
+        {% endif %}
+
+        <div class="text-center mt-4">
+            <a href="{{ path('app_home') }}" class="btn btn-primary">Retour à l'accueil</a>
+        </div>
+    </div>
+{% endblock %}

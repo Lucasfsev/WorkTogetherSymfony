@@ -19,7 +19,7 @@
                             <div class="card-header bg-primary text-white">{{ offer.name }}</div>
                             <div class="card-body">
                                 <h5 class="card-title">{{ offer.unitLimit }} unités</h5>
-                                <p class="card-text">{{ offer.price|number_format(2, ',', ' ') }} €/mois</p>
+                                <p class="card-text">{{ offer.price|number_format(2, ',', ' ') }} €/mois TTC</p>
                                 <a href="{{ path('offer_show', { 'id': offer.id }) }}" class="btn btn-primary">Voir l'offre</a>
                             </div>
                         </div>

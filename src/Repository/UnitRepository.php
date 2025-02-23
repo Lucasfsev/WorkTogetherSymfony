@@ -16,6 +16,15 @@ class UnitRepository extends ServiceEntityRepository
         parent::__construct($registry, Unit::class);
     }
 
+    public function findAvailableUnits(int $limit)
+    {
+        return $this->createQueryBuilder('u')
+            ->leftJoin('u.orders', 'o')
+            ->andWhere('o.id IS NULL') // Vérifie que l'unité n'est pas réservée
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
     //    /**
     //     * @return Unit[] Returns an array of Unit objects
     //     */
