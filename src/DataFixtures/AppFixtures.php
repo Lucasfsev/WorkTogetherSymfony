@@ -35,7 +35,7 @@ class AppFixtures extends Fixture
         $TypeUnit = [
             "Libre" => "#403f3f",
             "Serveur Web" => "#47a7c9",
-            "Stockage" => "##6e6b6b",
+            "Stockage" => "#6e6b6b",
             "Base de donnée" => "#3fba60"
         ];
         $TypeIntervention = [

@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier mon profil{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-primary text-center">Modifier mon profil</h1>
+
+        {{ form_start(form) }}
+        <div class="form-group">
+            {{ form_label(form.firstname) }}
+            {{ form_widget(form.firstname, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.firstname) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.lastname) }}
+            {{ form_widget(form.lastname, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.lastname) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.mailAddress) }}
+            {{ form_widget(form.mailAddress, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.mailAddress) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.billingAddress) }}
+            {{ form_widget(form.billingAddress, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.billingAddress) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.postCode) }}
+            {{ form_widget(form.postCode, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.postCode) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.town) }}
+            {{ form_widget(form.town, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.town) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.country) }}
+            {{ form_widget(form.country, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.country) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.newPassword.first) }}
+            {{ form_widget(form.newPassword.first, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.newPassword.first) }}
+        </div>
+
+        <div class="form-group">
+            {{ form_label(form.newPassword.second) }}
+            {{ form_widget(form.newPassword.second, { 'attr': {'class': 'form-control'} }) }}
+            {{ form_errors(form.newPassword.second) }}
+        </div>
+
+        {{ form_widget(form.submit, { 'attr': {'class': 'btn btn-primary mt-3'} }) }}
+        {{ form_end(form) }}
+
+        <div class="text-center mt-5">
+            <a href="{{ path('app_profil') }}" class="btn btn-primary">Retour</a>
+        </div>
+    </div>
+{% endblock %}

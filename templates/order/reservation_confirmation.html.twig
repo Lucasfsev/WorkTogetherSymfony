@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Confirmation de réservation{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <h1 class="text-primary text-center">Confirmation de réservation</h1>
+        <p class="text-center">Votre réservation pour l'offre <strong>{{ order.offer.name }}</strong> a été effectuée avec succès.</p>
+        <p class="text-center">Numéro de commande : <strong>{{ order.id }}</strong></p>
+        <div class="text-center mt-5">
+            <a href="{{ path('offer_index') }}" class="btn btn-primary">Retour à la liste des offres</a>
+        </div>
+    </div>
+{% endblock %}

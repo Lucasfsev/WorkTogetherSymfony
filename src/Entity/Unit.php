@@ -30,15 +30,9 @@ class Unit
     #[ORM\JoinColumn(nullable: false)]
     private ?Bay $bay = null;
 
-    /**
-     * @var Collection<int, Intervention>
-     */
     #[ORM\OneToMany(targetEntity: Intervention::class, mappedBy: 'unit')]
     private Collection $interventions;
 
-    /**
-     * @var Collection<int, Order>
-     */
     #[ORM\ManyToMany(targetEntity: Order::class, inversedBy: 'units')]
     private Collection $orders;
 
@@ -61,7 +55,6 @@ class Unit
     public function setReference(string $reference): static
     {
         $this->reference = $reference;
-
         return $this;
     }
 
@@ -73,7 +66,6 @@ class Unit
     public function setState(?StateUnit $state): static
     {
         $this->state = $state;
-
         return $this;
     }
 
@@ -85,7 +77,6 @@ class Unit
     public function setType(?TypeUnit $type): static
     {
         $this->type = $type;
-
         return $this;
     }
 
@@ -97,43 +88,9 @@ class Unit
     public function setBay(?Bay $bay): static
     {
         $this->bay = $bay;
-
         return $this;
     }
 
-    /**
-     * @return Collection<int, Intervention>
-     */
-    public function getInterventions(): Collection
-    {
-        return $this->interventions;
-    }
-
-    public function addIntervention(Intervention $intervention): static
-    {
-        if (!$this->interventions->contains($intervention)) {
-            $this->interventions->add($intervention);
-            $intervention->setUnit($this);
-        }
-
-        return $this;
-    }
-
-    public function removeIntervention(Intervention $intervention): static
-    {
-        if ($this->interventions->removeElement($intervention)) {
-            // set the owning side to null (unless already changed)
-            if ($intervention->getUnit() === $this) {
-                $intervention->setUnit(null);
-            }
-        }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Order>
-     */
     public function getOrders(): Collection
     {
         return $this->orders;
@@ -151,7 +108,6 @@ class Unit
     public function removeOrder(Order $order): static
     {
         $this->orders->removeElement($order);
-
         return $this;
     }
 }

@@ -1,0 +1,58 @@
+{% extends '/base.html.twig' %}
+
+{% block title %}Gestion{% endblock %}
+
+{% block body %}
+    <div class="container mt-5">
+        <header class="text-center mb-4">
+            <h1 class="text-primary">Détails de la commande</h1>
+        </header>
+
+        <section class="mb-5">
+            <h2 class="text-secondary">Unités commandées</h2>
+            <div class="row">
+                {% for unit in order.units %}
+                    <div class="col-md-4 mb-4">
+                        <div class="card border-primary">
+                            <div class="card-header bg-primary text-white">
+                                <strong>{{ unit.reference }}</strong>
+                            </div>
+                            <div class="card-body d-flex justify-content-between align-items-center">
+                                <div>
+                                    <span class="badge" style="display: inline-block; width: 12px; height: 12px; border-radius: 50%; background-color: {{ unit.state.color }};" title="{{ unit.state.name }}"></span>
+                                    <span class="ms-2">{{ unit.state.name }}</span>
+                                    <p><strong>Type:</strong> {{ unit.type.reference }}</p>
+
+                                    <!-- Form to update the unit type -->
+                                    <form action="{{ path('update_unit_type', {'unitId': unit.id}) }}" method="post">
+                                        <div class="form-group">
+                                            <label for="type">Changer le type</label>
+                                            <select class="form-control" id="type" name="type">
+                                                {% for reference, color in types %}
+                                                    <option value="{{ reference }}" {% if reference == unit.type.reference %}selected{% endif %}>
+                                                        {{ reference }}
+                                                    </option>
+                                                {% endfor %}
+                                            </select>
+                                        </div>
+                                        <button type="submit" class="btn btn-secondary mt-2">Modifier</button>
+                                    </form>
+                                </div>
+
+                                <form action="{{ path('update_unit_state', {'unitId': unit.id, 'state': (unit.state.name == 'Arrêt' ? 'OK' : 'Arrêt')}) }}" method="post" class="unit-state-form">
+                                    <button type="submit" class="btn {{ unit.state.name == 'Arrêt' ? 'btn-primary' : 'btn-primary' }}">
+                                        {{ unit.state.name == 'Arrêt' ? 'Démarrer' : 'Arrêter' }}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </section>
+
+        <form action="{{ path('cancel_order', {'id': order.id}) }}" method="post" style="display:inline;">
+            <button type="submit" class="btn btn-danger mb-5">Annuler la commande</button>
+        </form>
+    </div>
+{% endblock %}

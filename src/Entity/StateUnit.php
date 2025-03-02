@@ -2,10 +2,10 @@
 
 namespace App\Entity;
 
-use App\Repository\StateRepository;
+use App\Repository\StateUnitRepository;
 use Doctrine\ORM\Mapping as ORM;
 
-#[ORM\Entity(repositoryClass: StateRepository::class)]
+#[ORM\Entity(repositoryClass: StateUnitRepository::class)]
 class StateUnit
 {
     #[ORM\Id]
@@ -32,7 +32,6 @@ class StateUnit
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -44,7 +43,6 @@ class StateUnit
     public function setColor(string $color): static
     {
         $this->color = $color;
-
         return $this;
     }
 }

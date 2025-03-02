@@ -3,7 +3,7 @@
 ![Logo](assets/images/logo_WorkTogether.webp)
 
 # MCD
-![MCD_MLD](assets/images/MCD_MLD.png)
+![BDD](assets/images/bdd.png)
 
 
 # Installation du projet
@@ -27,7 +27,21 @@
 - cd /mnt/c.. (till project)
 - vendor/bin/dep deploy
 
-# TO DO
+# Documentation : 
+- WIP
 
-- Finir et valider la base de donnée (Fixtures, entities)
-- Réparer le mailer
+# TO DO
+- Page Contact
+- Page Mentions Légales
+- Rôle Technicien
+- Suppression des données - Anonymisation
+- Champ Numéro de Téléphone
+
+# Évolutions :
+
+- Système de Ticketing
+- Pouvoir voir le mot de passe avec un bouton lors de la création / modification du compte
+- Email de vérification au changement de mail
+- Calcul du temps d'arrêt du service
+- Système de Promotion
+

@@ -1,25 +1,33 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des Offres{% endblock %}
+{% block title %}Liste des Offres - WorkTogether Data Solutions{% endblock %}
 
 {% block body %}
     <div class="container mt-5">
         <header class="text-center mb-4">
-            <h1 class="text-primary">Liste des Offres</h1>
+            <img src="{{ asset('images/WorkTogether_bear_logo.webp') }}" alt="WorkTogether Data Solutions Bear" class="img-fluid mb-3 rounded-circle" style="max-width: 200px; height: 200px;">
+            <h1 class="text-primary">Nos Offres Commerciales</h1>
+            <p class="lead">Découvrez nos offres adaptées à vos besoins en serveurs</p>
         </header>
 
-        <section>
-            <ul class="list-group">
+        <section class="mb-5">
+            <div class="row">
                 {% for offer in offers %}
-                    <li class="list-group-item">
-                        <a href="{{ path('offer_show', { 'id': offer.id }) }}">
-                            <h4>{{ offer.name }}</h4>
-                        </a>
-                    </li>
+                    <div class="col-md-3">
+                        <div class="card border-primary mb-3">
+                            <div class="card-header bg-primary text-white">{{ offer.name }}</div>
+                            <div class="card-body">
+                                <h5 class="card-title">{{ offer.unitLimit }} unités</h5>
+                                <p class="card-text">{{ offer.price|number_format(2, ',', ' ') }} €/mois TTC</p>
+                                <a href="{{ path('offer_show', { 'id': offer.id }) }}" class="btn btn-primary">Voir l'offre</a>
+                            </div>
+                        </div>
+                    </div>
                 {% else %}
-                    <p>Aucune offre disponible.</p>
+                    <p class="text-center w-100">Aucune offre disponible pour le moment.</p>
                 {% endfor %}
-            </ul>
+            </div>
         </section>
+
     </div>
 {% endblock %}

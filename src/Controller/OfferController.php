@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Offer;
 use App\Entity\Order;
+use App\Repository\OfferRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Bundle\SecurityBundle\Security;
@@ -22,9 +23,11 @@ class OfferController extends AbstractController
     }
 
     #[Route('/offers', name: 'offer_index')]
-    public function index(): Response
+    public function index(OfferRepository $offerRepository): Response
     {
-        $offers = $this->em->getRepository(Offer::class)->findAll();
+        // Récupérer toutes les offres triées par prix croissant
+        $offers = $offerRepository->findBy([], ['price' => 'ASC']);
+
         return $this->render('offer/index.html.twig', [
             'offers' => $offers,
         ]);
