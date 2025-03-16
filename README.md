@@ -31,8 +31,6 @@
 - WIP
 
 # TO DO
-- Page Contact
-- Page Mentions Légales
 - Rôle Technicien
 - Suppression des données - Anonymisation
 - Champ Numéro de Téléphone
