@@ -3,7 +3,7 @@
 ![Logo](assets/images/logo_WorkTogether.webp)
 
 # MCD
-![BDD](assets/images/bdd.png)
+![BDD](assets/images/BDD.png)
 
 
 # Installation du projet
@@ -14,7 +14,10 @@
 - php bin/console doctrine:database:create
 
 # Exécuter les migrations
-- php bin/console doctrine:migrations:migrate 
+- php bin/console doctrine:migrations:migrate
+
+# Exécuter les datafixtures
+- php bin/console doctrine:fixtures:load
 
 # Compiler les assets avec Webpack Encore
 - yarn encore dev --watch
