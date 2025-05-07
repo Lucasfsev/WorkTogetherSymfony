@@ -7,6 +7,21 @@
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }} {# Charge Bootstrap et les styles #}
     {% endblock %}
+
+<!-- Code de suivi Matomo -->
+        <script>
+            var _paq = window._paq = window._paq || [];
+            _paq.push(['trackPageView']);
+            _paq.push(['enableLinkTracking']);
+            (function() {
+                var u="//matomo.worktogether.com/";
+                _paq.push(['setTrackerUrl', u+'matomo.php']);
+                _paq.push(['setSiteId', '1']); // ID de votre site dans Matomo
+                var d=document, g=d.createElement('script'), s=d.getElementsByTagName('script')[0];
+                g.async=true; g.src=u+'matomo.js'; s.parentNode.insertBefore(g,s);
+            })();
+        </script>
+
 </head>
 <body class="d-flex flex-column min-vh-100">
 {% include 'header/header.html.twig' %} {# Inclusion du header #}
