@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
-    <link rel="icon" type="image/png" href="{{ asset('images/logo_WorkTogether.webp') }}">
+    <link rel="icon" type="image/png" href="{{ ('/images/logo_WorkTogether.webp') }}">
     {% block stylesheets %}
         {{ encore_entry_link_tags('app') }} {# Charge Bootstrap et les styles #}
     {% endblock %}

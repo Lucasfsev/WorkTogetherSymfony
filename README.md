@@ -1,9 +1,9 @@
 # Projet Work Together
 
-![Logo](assets/images/logo_WorkTogether.webp)
+![Logo](public/images/logo_WorkTogether.webp)
 
 # MCD
-![BDD](assets/images/BDD.png)
+![BDD](public/images/BDD.png)
 
 
 # Installation du projet
