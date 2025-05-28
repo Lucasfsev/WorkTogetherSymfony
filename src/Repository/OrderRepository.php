@@ -16,28 +16,67 @@ class OrderRepository extends ServiceEntityRepository
         parent::__construct($registry, Order::class);
     }
 
-    //    /**
-    //     * @return Order[] Returns an array of Order objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('o.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findOrdersWithEndDate(): array
+    {
+        return $this->createQueryBuilder('o')
+            ->where('o.endDate IS NOT NULL')
+            ->orderBy('o.endDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
 
-    //    public function findOneBySomeField($value): ?Order
-    //    {
-    //        return $this->createQueryBuilder('o')
-    //            ->andWhere('o.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * Récupère les commandes qui expirent aujourd'hui
+     */
+    public function findOrdersExpiringToday(): array
+    {
+        $today = new \DateTime();
+        $today->setTime(0, 0, 0);
+
+        $tomorrow = clone $today;
+        $tomorrow->add(new \DateInterval('P1D'));
+
+        return $this->createQueryBuilder('o')
+            ->where('o.endDate >= :today')
+            ->andWhere('o.endDate < :tomorrow')
+            ->setParameter('today', $today)
+            ->setParameter('tomorrow', $tomorrow)
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les commandes expirées depuis plus de X jours
+     */
+    public function findOrdersExpiredSince(int $days): array
+    {
+        $cutoffDate = new \DateTime();
+        $cutoffDate->setTime(0, 0, 0);
+        $cutoffDate->sub(new \DateInterval('P' . $days . 'D'));
+
+        return $this->createQueryBuilder('o')
+            ->where('o.endDate < :cutoffDate')
+            ->andWhere('o.endDate IS NOT NULL')
+            ->setParameter('cutoffDate', $cutoffDate)
+            ->orderBy('o.endDate', 'ASC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * Récupère les commandes déjà expirées
+     */
+    public function findExpiredOrders(): array
+    {
+        $today = new \DateTime();
+        $today->setTime(0, 0, 0);
+
+        return $this->createQueryBuilder('o')
+            ->where('o.endDate < :today')
+            ->andWhere('o.endDate IS NOT NULL')
+            ->setParameter('today', $today)
+            ->orderBy('o.endDate', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
 }

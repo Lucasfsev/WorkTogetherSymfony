@@ -52,7 +52,15 @@ class AppFixtures extends Fixture
         $users = [
             ["Julien", "Boucher", "julien.boucher@unmail.com", "password2025"],
             ["Clara", "Roche", "clara.roche@domain.com", "clara555"],
+            ["Jury", "E6", "jury.e6@epreuve.com", "jurye62025"],
         ];
+
+        $usersCompta = [
+            ["Paul", "Duriez", "paul.duriez@compta.com", "compta2025"],
+            ["Sophie", "Langlois", "sophie.langlois@compta.net", "sophie456"],
+            ["Jury", "Compta", "jury.compta@epreuve.com", "jurye62025."],
+        ];
+
         $offers = [
             ["Pack PME", 20, 25, true, 1680, "Un pack conçu pour les petites et moyennes entreprises souhaitant sécuriser et optimiser leur infrastructure informatique."],
             ["Pack Start-up", 15, 5, true, 900, "Idéal pour les jeunes entreprises et start-ups en pleine croissance, ce pack offre des solutions évolutives adaptées à vos besoins."],
@@ -139,6 +147,19 @@ class AppFixtures extends Fixture
             $password = $this->hasher->hashPassword($newUser, $user[3]);
             $newUser->setPassword($password);
             $newUser->setRole("ROLE_ADMIN");
+            $manager->persist($newUser);
+        }
+
+        // ADDING DATA FOR USERS WITH ROLE_COMPTA
+        foreach ($usersCompta as $user) {
+            $newUser = new User();
+            $newUser->setFirstname($user[0]);
+            $newUser->setLastname($user[1]);
+            $newUser->setMailAddress($user[2]);
+            $password = $this->hasher->hashPassword($newUser, $user[3]);
+            $newUser->setPassword($password);
+            $newUser->setRole("ROLE_COMPTA");
+            $newUser->setRoles(["ROLE_COMPTA"]);
             $manager->persist($newUser);
         }
 
